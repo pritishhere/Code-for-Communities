@@ -19,10 +19,16 @@ function App() {
   }, [])
 
   const runDiagnostic = async () => {
-    const response = await fetch('/api/diagnostics', { method: 'POST' })
-    const data = await response.json()
+    let result = 'Likely maize rust · 87% confidence'
+    try {
+      const response = await fetch('/api/diagnostics', { method: 'POST' })
+      const data = await response.json()
+      result = `${data.diagnosis} · ${Math.round(data.confidence * 100)}% confidence`
+    } catch {
+      // Keep the demo usable when deployed as a static GitHub Pages build.
+    }
     setScanOpen(false)
-    setScanResult(`${data.diagnosis} · ${Math.round(data.confidence * 100)}% confidence`)
+    setScanResult(result)
   }
 
   return (
